@@ -51,7 +51,7 @@ while (len(roundprompts) > 0):
 
 
 
-studyresultfile = open("studyresult.txt", "w")
+studyresultsfile = open("studyresults.txt", "w")
 for prompt in studyresults.keys():
-    studyresultfile.write(studyresults[prompt] + "---" + prompt + "\t" + studyset[prompt] + "\n\n")
-studyresultfile.close()
+    studyresultsfile.write(studyresults[prompt] + "---" + prompt + "\t" + studyset[prompt] + "\n\n")
+studyresultsfile.close()
