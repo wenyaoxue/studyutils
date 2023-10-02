@@ -7,7 +7,8 @@
         # after all - restart with the prompt/answer combos you got wrong (not overridden)
 # studyresults.txt
     # output file created in this folder
-    # NUMBER OF ROUNDS IT TOOK TO GET RIGHT --- PROMPT \t ANSWER \n\n (including after last)
+    # PROMPT \t ANSWER \t NUMBER OF ROUNDS IT TOOK TO GET RIGHT \n\n (including after last)
+    # note - can rename to and use as studyset.txt (eg keep some rows)
 
 
 studysetfile = open("studyset.txt")
@@ -16,7 +17,8 @@ studyresults = {}
 promptanswerpair = ""
 for line in studysetfile:
     if (line == "\n"):
-        prompt, answer = promptanswerpair.strip().split("\t")
+        pair_arr = promptanswerpair.strip().split("\t")
+        prompt, answer = pair_arr[0], pair_arr[1]
         studyset[prompt] = answer
         studyresults[prompt] = -1
         promptanswerpair = ""
@@ -27,12 +29,13 @@ studysetfile.close()
 import random
 roundprompts = list(studyset.keys())
 random.shuffle(roundprompts)
+roundnum = 1
 while (len(roundprompts) > 0):
     roundn = len(roundprompts)
     roundi = 1
     nextroundprompts = []
     print("-------------------------------------------------------")
-    print("NEW ROUND ---------------------------------------------")
+    print("ROUND", roundnum)
     print("-------------------------------------------------------")
     for prompt in roundprompts: #doesn't handle break line answers
         print(roundi,"/",roundn," ---------------------------------------------")
@@ -41,11 +44,13 @@ while (len(roundprompts) > 0):
             print("INCORRECT, expected:", studyset[prompt])
             if (input("override? [y for I was right] --> ") != "y"):
                 nextroundprompts.append(prompt)
-                studyresults[prompt] = roundi
+            else:
+                studyresults[prompt] = roundnum
         else:
-            studyresults[prompt] = roundi
+            studyresults[prompt] = roundnum
         roundi+=1
     roundprompts = nextroundprompts
+    roundnum+=1
     random.shuffle(roundprompts)
 
 
@@ -53,5 +58,5 @@ while (len(roundprompts) > 0):
 
 studyresultsfile = open("studyresults.txt", "w")
 for prompt in studyresults.keys():
-    studyresultsfile.write(studyresults[prompt] + "---" + prompt + "\t" + studyset[prompt] + "\n\n")
+    studyresultsfile.write(prompt + "\t" + studyset[prompt] +  "\t" + str(studyresults[prompt]) + "\n\n")
 studyresultsfile.close()
